@@ -1,9 +1,8 @@
 from Login import *
 from Login.login_variables import *
 
-from typing import Annotated
 from datetime import datetime, timedelta, timezone
-from fastapi import Depends, HTTPException, status
+from passlib.context import CryptContext
 
 pwdContext = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2Scheme = OAuth2PasswordBearer(tokenUrl="login")
