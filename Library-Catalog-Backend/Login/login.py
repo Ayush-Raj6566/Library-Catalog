@@ -7,8 +7,8 @@ login_router = APIRouter()
 
 
 @login_router.post("/api/login")
-def login(fromData: Login) -> Token:
-    user = authenticateUser(username=fromData.username,user_password=fromData.password,user_type=fromData.user_type)
+def login(fromData: Login, session: Session = Depends(get_session)) -> Token:
+    user = authenticateUser(username=fromData.username, user_password=fromData.password, user_type=fromData.user_type, session=session)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
