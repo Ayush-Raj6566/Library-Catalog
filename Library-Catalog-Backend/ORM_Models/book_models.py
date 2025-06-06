@@ -1,9 +1,8 @@
 from sqlmodel import SQLModel,Field,Relationship
 from enum import Enum
-from ORM_Models.login_models import UserInDB
 from datetime import date
 
-class Genre(Enum,str):
+class Genre(str,Enum):
     HORROR = "Horror"
     COMEDY = "Comedy"
     ACTION = "Action"
@@ -27,5 +26,5 @@ class BookTransaction(SQLModel,table=True):
     issue_date: date
     expire_date: date
 
-    borrowers: list[UserInDB] = Relationship(back_populates="book_dues")
+    borrowers: list["UserInDB"] = Relationship(back_populates="book_dues")
     book: Book = Relationship(back_populates="transactions")
