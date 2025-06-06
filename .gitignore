@@ -32,3 +32,7 @@ Library-Catalog-Backend/ORM_Models/__pycache__/book_models.cpython-312.pyc
 Library-Catalog-Backend/ORM_Models/__pycache__/login_models.cpython-312.pyc
 Library-Catalog-Backend/ORM_Models/__pycache__/profile_models.cpython-312.pyc
 Library-Catalog-Backend/ORM_Models/__pycache__/token_models.cpython-312.pyc
+Library-Catalog-Backend/Login/__pycache__/__init__.cpython-312.pyc
+Library-Catalog-Backend/Login/__pycache__/login_functions.cpython-312.pyc
+Library-Catalog-Backend/Login/__pycache__/login_variables.cpython-312.pyc
+Library-Catalog-Backend/Login/__pycache__/login.cpython-312.pyc
