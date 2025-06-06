@@ -21,3 +21,14 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+Library-Catalog-Backend/__pycache__/main.cpython-312.pyc
+Library-Catalog-Backend/Dashboard/__pycache__/__init__.cpython-312.pyc
+Library-Catalog-Backend/Dashboard/__pycache__/dashboard.cpython-312.pyc
+Library-Catalog-Backend/Dashboard/Profile/__pycache__/__init__.cpython-312.pyc
+Library-Catalog-Backend/Dashboard/Profile/__pycache__/profile.cpython-312.pyc
+Library-Catalog-Backend/Exceptions/__pycache__/exceptions.cpython-312.pyc
+Library-Catalog-Backend/ORM_Models/__pycache__/__init__.cpython-312.pyc
+Library-Catalog-Backend/ORM_Models/__pycache__/book_models.cpython-312.pyc
+Library-Catalog-Backend/ORM_Models/__pycache__/login_models.cpython-312.pyc
+Library-Catalog-Backend/ORM_Models/__pycache__/profile_models.cpython-312.pyc
+Library-Catalog-Backend/ORM_Models/__pycache__/token_models.cpython-312.pyc
