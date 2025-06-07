@@ -17,8 +17,8 @@ class AdminInDB(Base,table=True):
     hashed_password: str  
 
 class UserType(str, Enum):
-    USER = "User"
-    ADMIN = "Admin"
+    USER = "user"
+    ADMIN = "admin"
 
 class Login(SQLModel):
     username: str

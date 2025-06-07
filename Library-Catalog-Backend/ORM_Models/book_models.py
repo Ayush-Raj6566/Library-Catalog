@@ -7,6 +7,11 @@ class Genre(str,Enum):
     COMEDY = "Comedy"
     ACTION = "Action"
 
+class TransactionStatus(str, Enum):
+    PENDING = "Pending"
+    APPROVED = "Approved"
+    REJECT = "Rejected"
+
 class Book(SQLModel, table = True):
     book_id: int | None = Field(default=None,primary_key=True)
     name: str
@@ -25,6 +30,16 @@ class BookTransaction(SQLModel,table=True):
     book_id: int = Field(foreign_key = "book.book_id")
     issue_date: date
     expire_date: date
+    status: TransactionStatus = TransactionStatus.PENDING
 
     borrowers: list["UserInDB"] = Relationship(back_populates="book_dues")
     book: Book = Relationship(back_populates="transactions")
+
+class BookUpdate(SQLModel):
+    name: str | None = None
+    author: str | None = None
+    genre: Genre | None = None
+    number_of_pages: int | None = None
+    publish_data: date | None = None
+    publication: str | None = None
+    number_of_available_copies: int | None = None
