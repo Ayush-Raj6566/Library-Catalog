@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from ORM_Models import SQLModel,engine
 from Login.login import login_router
+from Dashboard.dashboard import dashboard_router
+from Dashboard.Profile.profile import profile_router
 
 
 @asynccontextmanager
@@ -20,10 +22,11 @@ app.add_middleware(
 )
 
 app.include_router(router=login_router,tags=["Login"])
+app.include_router(router=dashboard_router,tags=["Dashboard"])
+app.include_router(router=profile_router,tags=["Profile"])
 
 
 
-
-@app.get("/")
+@app.get("/home")
 def welcome():
     return {"message" : "Welcome to home of books"}
