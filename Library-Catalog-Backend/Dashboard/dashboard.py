@@ -7,6 +7,7 @@ from Login.login_variables import *
 from Exceptions.exceptions import wrong_user_access,item_not_found
 from ORM_Models.login_models import UserType
 from ORM_Models.book_models import Book,BookUpdate
+from Login.login_functions import getUserDetail
 
 dashboard_router = APIRouter()
 
@@ -50,6 +51,16 @@ def get_book_by_category(book_category: str, token: Annotated[str, Depends(oauth
     statement = select(Book).where(Book.genre==book_category)
     book_results = session.exec(statement).all()
     return book_results
+
+@dashboard_router.get("/dashboard/user/my_books")
+def get_all_book_transaction(token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
+    payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
+    curr_user_type = payload.get("user_type")
+    curr_user = payload.get("sub")
+    if (curr_user_type!=UserType.USER):
+        raise wrong_user_access
+    user = getUserDetail(username=curr_user, user_type=curr_user_type, session=session)
+    return user.book_dues
 
 #------------Admin DashBoard Routes------------#
 @dashboard_router.post("/dashboard/admin/add_book")
