@@ -11,7 +11,7 @@ from Exceptions.exceptions import user_not_found
 
 profile_router = APIRouter()
 
-@profile_router.get("dashboard/profile")
+@profile_router.get("/dashboard/profile")
 def get_profile_detail(token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     username = payload.get("sub")
