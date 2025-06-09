@@ -1,76 +1,92 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: ""
-  });
-
+const Login = () => {
+  const [username, setUsername] = useState(""); 
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("user"); 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login submitted:", credentials);
-    // Placeholder: Add login logic here later
+
+    try {
+      const response = await fetch("https://humor-abilities-later-vcr.trycloudflare.com/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          user_type: userType
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("userType", userType);
+        localStorage.setItem("username", username);
+         localStorage.setItem("fullName", data.fullName);
+console.log(data); // check if fullName exists
+
+      if (userType.toLowerCase() === "admin") {
+  navigate("/librarian-dashboard"); // librarian panel
+} else {
+  navigate("/user-dashboard"); // user panel
+}
+
+      } else {
+        alert(data.detail || "Login failed.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Failed to connect to server");
+    }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form 
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="flex items-center justify-center h-screen">
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
+        <h2 className="text-2xl mb-4">Login</h2>
 
-        <div className="mb-4">
-          <label className="block mb-1">Username</label>
-          <input 
-            type="text"
-            name="username"
-            value={credentials.username}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Username"
+          className="w-full p-2 mb-4 border rounded"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
 
-        <div className="mb-4">
-          <label className="block mb-1">Password</label>
-          <div className="relative">
-            <input 
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              required
-              className="w-full border px-3 py-2 rounded pr-10"
-            />
-            <button 
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-2 text-sm text-blue-600"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-          </div>
-        </div>
+        <div className="relative mb-4">
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    className="w-full p-2 pr-10 border rounded"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+  />
+  <span
+    className="absolute right-3 top-2.5 cursor-pointer text-gray-500"
+    onClick={() => setShowPassword(!showPassword)}
+  >
+    {showPassword ? "🙈" : "👁️"}
+  </span>
+</div>
 
-      <button
-  type="button"
-  onClick={() => alert('Forgot Password clicked!')}
-  className="text-blue-600 underline text-sm"
->
-  Forgot Password?
-</button>
 
-        <button 
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
+      <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+  <option value="user">User</option>
+  <option value="admin">Librarian</option> {/* was "Admin" before */}
+</select>
+
+
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
           Login
         </button>
 
@@ -80,6 +96,6 @@ function Login() {
       </form>
     </div>
   );
-}
+};
 
 export default Login;

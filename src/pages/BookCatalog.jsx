@@ -1,6 +1,6 @@
 // src/pages/BookCatalog.jsx
 import React, { useState } from 'react';
-
+import { Link } from "react-router-dom";
 const sampleBooks = [
   { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', available: true },
   { id: 2, title: '1984', author: 'George Orwell', available: false },
@@ -28,21 +28,24 @@ const BookCatalog = () => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {filteredBooks.map(book => (
-          <div key={book.id} className="border p-4 rounded shadow">
-            <h2 className="text-xl font-semibold">{book.title}</h2>
-            <p className="text-gray-600">by {book.author}</p>
-            <button
-              className={`mt-4 px-4 py-2 rounded ${
-                book.available ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-400 text-white cursor-not-allowed'
-              }`}
-              disabled={!book.available}
-            >
-              {book.available ? 'Borrow' : 'Not Available'}
-            </button>
-          </div>
-        ))}
+  {filteredBooks.map(book => (
+    <Link key={book.id} to={`/book/${book.id}`}>
+      <div className="border p-4 rounded shadow hover:shadow-lg transition">
+        <h2 className="text-xl font-semibold">{book.title}</h2>
+        <p className="text-gray-600">by {book.author}</p>
+        <button
+          className={`mt-4 px-4 py-2 rounded ${
+            book.available ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-400 text-white cursor-not-allowed'
+          }`}
+          disabled={!book.available}
+        >
+          {book.available ? 'Borrow' : 'Not Available'}
+        </button>
       </div>
+    </Link>
+  ))}
+</div>
+
     </div>
   );
 };
