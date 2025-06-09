@@ -16,7 +16,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://remind-hampshire-resources-languages.trycloudflare.com/api/user/signup", {
+      const response = await fetch("https://ef51-49-42-177-117.ngrok-free.app/api/user/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

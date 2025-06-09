@@ -38,7 +38,7 @@ const UpdateBookForm = () => {
 
     try {
       const res = await fetch(
-        `https://humor-abilities-later-vcr.trycloudflare.com/dashboard/admin/update_book/${bookId}`,
+        `https://ef51-49-42-177-117.ngrok-free.app/dashboard/admin/update_book/${bookId}`,
         {
           method: "PATCH",
           headers: {
