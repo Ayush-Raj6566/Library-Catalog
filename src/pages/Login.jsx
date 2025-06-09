@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://humor-abilities-later-vcr.trycloudflare.com/api/login", {
+      const response = await fetch("https://remind-hampshire-resources-languages.trycloudflare.com/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

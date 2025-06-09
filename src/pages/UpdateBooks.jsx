@@ -12,7 +12,7 @@ const UpdateBooks = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://humor-abilities-later-vcr.trycloudflare.com/dashboard/user/all_books",
+        "https://remind-hampshire-resources-languages.trycloudflare.com/dashboard/user/all_books",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -42,7 +42,7 @@ const UpdateBooks = () => {
 
   try {
     const res = await fetch(
-      `https://humor-abilities-later-vcr.trycloudflare.com/dashboard/admin/delete_book/${bookId}`,
+      `https://remind-hampshire-resources-languages.trycloudflare.com/dashboard/admin/delete_book/${bookId}`,
       {
         method: "DELETE",
         headers: {
