@@ -12,9 +12,37 @@ function Signup() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+
+    try {
+      const response = await fetch("https://9c5e-49-42-150-8.ngrok-free.app/api/user/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      // After login response is received and is ok
+localStorage.setItem("token", data.token);
+localStorage.setItem("fullName", data.fullName);  // save full name here
+localStorage.setItem("username", data.username);
+localStorage.setItem("email", data.email);
+
+
+      if (response.ok) {
+        alert("Signup successful! Please log in.");
+        window.location.href = "/login";
+      } else {
+        alert(data.detail || "Signup failed.");
+      }
+    } catch (error) {
+      console.error("Signup failed:", error);
+      alert("Signup failed. Please try again.");
+    }
   };
 
   return (
