@@ -12,7 +12,7 @@ const UpdateBooks = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://ef51-49-42-177-117.ngrok-free.app/dashboard/user/all_books",
+        "https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/user/all_books",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -42,7 +42,7 @@ const UpdateBooks = () => {
 
   try {
     const res = await fetch(
-      `https://ef51-49-42-177-117.ngrok-free.app/dashboard/admin/delete_book/${bookId}`,
+      `https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/admin/delete_book/${bookId}`,
       {
         method: "DELETE",
         headers: {

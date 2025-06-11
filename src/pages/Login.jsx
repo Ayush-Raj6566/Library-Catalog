@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://ef51-49-42-177-117.ngrok-free.app/api/login", {
+      const response = await fetch("https://drug-rotary-providers-expressed.trycloudflare.com/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
