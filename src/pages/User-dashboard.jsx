@@ -221,7 +221,18 @@ const UserDashboard = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          {renderBooks(books)}
+          {renderBooks(
+  books.filter((book) => {
+    const value =
+      searchField === "title"
+        ? book.name
+        : searchField === "author"
+        ? book.author
+        : book.genre;
+    return value?.toLowerCase().includes(searchQuery.toLowerCase());
+  })
+)}
+
         </>
       )}
 
