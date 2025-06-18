@@ -116,7 +116,7 @@ def get_issue_requests(token: Annotated[str, Depends(oauth2Scheme)], session: Se
     curr_user_type = payload.get("user_type")
     if (curr_user_type!=UserType.ADMIN):
         raise wrong_user_access
-    issues = session.exec(select(BookTransaction)).all()
+    issues = session.exec(select(BookTransaction).where(BookTransaction.status==TransactionStatus.PENDING)).all()
     issues_dict_arr = []
     for issue in issues:
         issues_dict_arr.append({
@@ -125,7 +125,7 @@ def get_issue_requests(token: Annotated[str, Depends(oauth2Scheme)], session: Se
         })
     return issues_dict_arr
 
-@dashboard_router.get("/dashboard/admin/issue_request/approve/{book_request_id}")
+@dashboard_router.patch("/dashboard/admin/issue_request/approve/{book_request_id}")
 def approve_requests(book_request_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
@@ -137,7 +137,7 @@ def approve_requests(book_request_id: int, token: Annotated[str, Depends(oauth2S
     session.commit()
     return {"message": "Approval Successful"}
 
-@dashboard_router.get("/dashboard/admin/issue_request/reject/{book_request_id}")
+@dashboard_router.patch("/dashboard/admin/issue_request/reject/{book_request_id}")
 def reject_requests(book_request_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
