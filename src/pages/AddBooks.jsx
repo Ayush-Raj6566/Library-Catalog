@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import BASE_URL from "../api";
 const AddBooks = () => {
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
@@ -16,7 +16,7 @@ const AddBooks = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/admin/add_book", {
+      const response = await fetch(`${BASE_URL}/dashboard/admin/add_book`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

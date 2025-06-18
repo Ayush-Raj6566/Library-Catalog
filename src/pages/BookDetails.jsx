@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
+import BASE_URL from "../api";
 function BookDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -8,7 +8,7 @@ function BookDetails() {
 
   useEffect(() => {
     // Replace with your friend's ngrok URL
-    fetch(`https://f4f0-49-42-180-36.ngrok-free.app/book/${id}`)
+    fetch(`${BASE_URL}/book/${id}`)
       .then(res => res.json())
       .then(data => setBook(data))
       .catch(err => console.error("Error fetching book:", err));
