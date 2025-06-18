@@ -38,7 +38,7 @@ const UpdateBookForm = () => {
 
     try {
       const res = await fetch(
-        `https://humor-abilities-later-vcr.trycloudflare.com/dashboard/admin/update_book/${bookId}`,
+        `https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/admin/update_book/${bookId}`,
         {
           method: "PATCH",
           headers: {

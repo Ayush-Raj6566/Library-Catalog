@@ -28,7 +28,7 @@ const UserDashboard = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://hd-fraction-scheme-enrolled.trycloudflare.com/dashboard/user/all_books",
+        "https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/user/all_books",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -49,7 +49,7 @@ const UserDashboard = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://hd-fraction-scheme-enrolled.trycloudflare.com/dashboard/user/my_books",
+        "https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/user/my_books",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -71,7 +71,7 @@ const UserDashboard = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://hd-fraction-scheme-enrolled.trycloudflare.com/dashboard/user/search_book/${encodeURIComponent(
+        `https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/user/search_book/${encodeURIComponent(
           searchQuery.trim()
         )}`,
         {
@@ -106,7 +106,7 @@ const UserDashboard = () => {
   }, [searchQuery, activeTab, searchBooks]);
 
   const requestBook = (bookId) => {
-    fetch("https://hd-fraction-scheme-enrolled.trycloudflare.com/dashboard/user/request_book", {
+    fetch("https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/user/request_book", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -221,7 +221,18 @@ const UserDashboard = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          {renderBooks(books)}
+          {renderBooks(
+  books.filter((book) => {
+    const value =
+      searchField === "title"
+        ? book.name
+        : searchField === "author"
+        ? book.author
+        : book.genre;
+    return value?.toLowerCase().includes(searchQuery.toLowerCase());
+  })
+)}
+
         </>
       )}
 

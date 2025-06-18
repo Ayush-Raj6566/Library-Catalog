@@ -16,7 +16,7 @@ const AddBooks = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("https://hd-fraction-scheme-enrolled.trycloudflare.com/dashboard/admin/add_book", {
+      const response = await fetch("https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/admin/add_book", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
