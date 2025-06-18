@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends
 from typing import Annotated
 from Login.login_functions import oauth2Scheme,get_session
-from sqlmodel import Session,select
+from sqlmodel import Session,select, func
 import jwt
 from datetime import datetime,timedelta
 from Login.login_variables import *
@@ -24,33 +24,33 @@ def get_all_books(token: Annotated[str, Depends(oauth2Scheme)], session: Session
     all_books = session.exec(statement).all()
     return all_books
 
-@dashboard_router.get("/dashboard/user/search_book/{book_name}")
+@dashboard_router.get("/dashboard/user/search_book/name/{book_name}")
 def get_book_by_title(book_name: str, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
-    statement = select(Book).where(Book.name==book_name)
+    statement = select(Book).where(func.lower(Book.name).like(f"%{book_name.lower()}%"))
     book_results = session.exec(statement).all()
     return book_results
 
-@dashboard_router.get("/dashboard/user/search_book/{book_author_name}")
+@dashboard_router.get("/dashboard/user/search_book/author/{book_author_name}")
 def get_book_by_author(book_author_name: str, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
-    statement = select(Book).where(Book.author==book_author_name)
+    statement = select(Book).where(func.lower(Book.author).like(f"%{book_author_name.lower()}%"))
     book_results = session.exec(statement).all()
     return book_results
 
-@dashboard_router.get("/dashboard/user/search_book/{book_category}")
+@dashboard_router.get("/dashboard/user/search_book/category/{book_category}")
 def get_book_by_category(book_category: str, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
-    statement = select(Book).where(Book.genre==book_category)
+    statement = select(Book).where(func.lower(Book.genre).like(f"%{book_category.lower()}%"))
     book_results = session.exec(statement).all()
     return book_results
 

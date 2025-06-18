@@ -8,6 +8,7 @@ from Login.login_variables import *
 from ORM_Models.login_models import UserInDB,AdminInDB
 from ORM_Models.profile_models import *
 from Exceptions.exceptions import user_not_found
+from sqlalchemy.orm import selectinload
 
 profile_router = APIRouter()
 
@@ -18,7 +19,7 @@ def get_profile_detail(token: Annotated[str, Depends(oauth2Scheme)], session: Se
     user_type = payload.get("user_type")
     profile_detail = None
     if user_type==UserType.USER:
-        statement = select(UserInDB).where(UserInDB.username==username)
+        statement = select(UserInDB).options(selectinload(UserInDB.book_dues)).where(UserInDB.username==username)
         profile_detail = session.exec(statement).first()
     elif user_type==UserType.ADMIN:
         statement = select(AdminInDB).where(AdminInDB.username==username)
