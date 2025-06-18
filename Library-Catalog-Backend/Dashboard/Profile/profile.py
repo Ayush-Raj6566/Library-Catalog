@@ -19,7 +19,7 @@ def get_profile_detail(token: Annotated[str, Depends(oauth2Scheme)], session: Se
     user_type = payload.get("user_type")
     profile_detail = None
     if user_type==UserType.USER:
-        statement = select(UserInDB).options(selectinload(UserInDB.book_dues)).where(UserInDB.username==username)
+        statement = select(UserInDB).options(selectinload(UserInDB.book_dues)).where(UserInDB.username==username) # type: ignore
         profile_detail = session.exec(statement).first()
     elif user_type==UserType.ADMIN:
         statement = select(AdminInDB).where(AdminInDB.username==username)

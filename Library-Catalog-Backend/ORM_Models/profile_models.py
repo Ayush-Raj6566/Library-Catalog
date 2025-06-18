@@ -7,7 +7,6 @@ class UserProfileExpose(SQLModel):
     username: str
     email: str | None = None
     number_of_books_borrowed: int
-    book_dues: list[BookTransaction]
 
 class AdminProfileExpose(SQLModel):
     fullName: str
