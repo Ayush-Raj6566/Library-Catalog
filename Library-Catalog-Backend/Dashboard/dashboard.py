@@ -1,13 +1,13 @@
 from fastapi import APIRouter,Depends
 from typing import Annotated
 from Login.login_functions import oauth2Scheme,get_session
-from sqlmodel import Session,select
+from sqlmodel import Session,select, func
 import jwt
 from datetime import datetime,timedelta
 from Login.login_variables import *
 from Exceptions.exceptions import wrong_user_access,item_not_found
 from ORM_Models.login_models import UserType
-from ORM_Models.book_models import Book,BookUpdate,BookTransaction
+from ORM_Models.book_models import Book,BookUpdate,BookTransaction,TransactionStatus
 from Login.login_functions import getUserDetail
 
 dashboard_router = APIRouter()
@@ -24,33 +24,33 @@ def get_all_books(token: Annotated[str, Depends(oauth2Scheme)], session: Session
     all_books = session.exec(statement).all()
     return all_books
 
-@dashboard_router.get("/dashboard/user/search_book/{book_name}")
+@dashboard_router.get("/dashboard/user/search_book/name/{book_name}")
 def get_book_by_title(book_name: str, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
-    statement = select(Book).where(Book.name==book_name)
+    statement = select(Book).where(func.lower(Book.name).like(f"%{book_name.lower()}%"))
     book_results = session.exec(statement).all()
     return book_results
 
-@dashboard_router.get("/dashboard/user/search_book/{book_author_name}")
+@dashboard_router.get("/dashboard/user/search_book/author/{book_author_name}")
 def get_book_by_author(book_author_name: str, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
-    statement = select(Book).where(Book.author==book_author_name)
+    statement = select(Book).where(func.lower(Book.author).like(f"%{book_author_name.lower()}%"))
     book_results = session.exec(statement).all()
     return book_results
 
-@dashboard_router.get("/dashboard/user/search_book/{book_category}")
+@dashboard_router.get("/dashboard/user/search_book/category/{book_category}")
 def get_book_by_category(book_category: str, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
     payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
     curr_user_type = payload.get("user_type")
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
-    statement = select(Book).where(Book.genre==book_category)
+    statement = select(Book).where(func.lower(Book.genre).like(f"%{book_category.lower()}%"))
     book_results = session.exec(statement).all()
     return book_results
 
@@ -62,7 +62,7 @@ def get_all_book_transaction(token: Annotated[str, Depends(oauth2Scheme)], sessi
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
     user = getUserDetail(username=curr_user, user_type=curr_user_type, session=session)
-    return user.book_dues
+    return user.book_dues # type: ignore
 
 @dashboard_router.post("/dashboard/user/request_book/{book_id}")
 def request_book(book_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
@@ -117,7 +117,37 @@ def get_issue_requests(token: Annotated[str, Depends(oauth2Scheme)], session: Se
     if (curr_user_type!=UserType.ADMIN):
         raise wrong_user_access
     issues = session.exec(select(BookTransaction)).all()
-    return issues
+    issues_dict_arr = []
+    for issue in issues:
+        issues_dict_arr.append({
+            "book_transaction": issue,
+            "book_info": issue.book
+        })
+    return issues_dict_arr
+
+@dashboard_router.get("/dashboard/admin/issue_request/approve/{book_request_id}")
+def approve_requests(book_request_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
+    payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
+    curr_user_type = payload.get("user_type")
+    if (curr_user_type!=UserType.ADMIN):
+        raise wrong_user_access
+    transaction = session.get(BookTransaction,book_request_id)
+    transaction.status = TransactionStatus.APPROVED # type: ignore
+    session.add(transaction)
+    session.commit()
+    return {"message": "Approval Successful"}
+
+@dashboard_router.get("/dashboard/admin/issue_request/reject/{book_request_id}")
+def reject_requests(book_request_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
+    payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
+    curr_user_type = payload.get("user_type")
+    if (curr_user_type!=UserType.ADMIN):
+        raise wrong_user_access
+    transaction = session.get(BookTransaction,book_request_id)
+    transaction.status = TransactionStatus.REJECT # type: ignore
+    session.add(transaction)
+    session.commit()
+    return {"message": "Reject Successful"}
 
 @dashboard_router.delete("/dashboard/admin/delete_book/{book_id}")
 def delete_book(book_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
