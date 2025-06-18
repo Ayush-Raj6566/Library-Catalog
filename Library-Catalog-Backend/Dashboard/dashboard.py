@@ -7,7 +7,7 @@ from datetime import datetime,timedelta
 from Login.login_variables import *
 from Exceptions.exceptions import wrong_user_access,item_not_found
 from ORM_Models.login_models import UserType
-from ORM_Models.book_models import Book,BookUpdate,BookTransaction
+from ORM_Models.book_models import Book,BookUpdate,BookTransaction,TransactionStatus
 from Login.login_functions import getUserDetail
 
 dashboard_router = APIRouter()
@@ -62,7 +62,7 @@ def get_all_book_transaction(token: Annotated[str, Depends(oauth2Scheme)], sessi
     if (curr_user_type!=UserType.USER):
         raise wrong_user_access
     user = getUserDetail(username=curr_user, user_type=curr_user_type, session=session)
-    return user.book_dues
+    return user.book_dues # type: ignore
 
 @dashboard_router.post("/dashboard/user/request_book/{book_id}")
 def request_book(book_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
@@ -117,7 +117,37 @@ def get_issue_requests(token: Annotated[str, Depends(oauth2Scheme)], session: Se
     if (curr_user_type!=UserType.ADMIN):
         raise wrong_user_access
     issues = session.exec(select(BookTransaction)).all()
-    return issues
+    issues_dict_arr = []
+    for issue in issues:
+        issues_dict_arr.append({
+            "book_transaction": issue,
+            "book_info": issue.book
+        })
+    return issues_dict_arr
+
+@dashboard_router.get("/dashboard/admin/issue_request/approve/{book_request_id}")
+def approve_requests(book_request_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
+    payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
+    curr_user_type = payload.get("user_type")
+    if (curr_user_type!=UserType.ADMIN):
+        raise wrong_user_access
+    transaction = session.get(BookTransaction,book_request_id)
+    transaction.status = TransactionStatus.APPROVED # type: ignore
+    session.add(transaction)
+    session.commit()
+    return {"message": "Approval Successful"}
+
+@dashboard_router.get("/dashboard/admin/issue_request/reject/{book_request_id}")
+def reject_requests(book_request_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):
+    payload = jwt.decode(token,SECRET_KEY,[ALGORITHM])
+    curr_user_type = payload.get("user_type")
+    if (curr_user_type!=UserType.ADMIN):
+        raise wrong_user_access
+    transaction = session.get(BookTransaction,book_request_id)
+    transaction.status = TransactionStatus.REJECT # type: ignore
+    session.add(transaction)
+    session.commit()
+    return {"message": "Reject Successful"}
 
 @dashboard_router.delete("/dashboard/admin/delete_book/{book_id}")
 def delete_book(book_id: int, token: Annotated[str, Depends(oauth2Scheme)], session: Session = Depends(get_session)):

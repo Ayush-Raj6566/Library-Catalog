@@ -32,7 +32,7 @@ class BookTransaction(SQLModel,table=True):
     expire_date: date
     status: TransactionStatus = TransactionStatus.PENDING
 
-    borrowers: list["UserInDB"] = Relationship(back_populates="book_dues")
+    borrowers: list["UserInDB"] = Relationship(back_populates="book_dues") # type: ignore
     book: Book = Relationship(back_populates="transactions")
 
 class BookUpdate(SQLModel):
