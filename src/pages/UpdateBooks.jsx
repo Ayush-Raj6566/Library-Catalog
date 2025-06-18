@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";  // assuming you use react-router for navigation
-
+import BASE_URL from "../api";
 const UpdateBooks = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ const UpdateBooks = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/user/all_books",
+        `${BASE_URL}/dashboard/user/all_books`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -42,7 +42,7 @@ const UpdateBooks = () => {
 
   try {
     const res = await fetch(
-      `https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/admin/delete_book/${bookId}`,
+      `${BASE_URL}/dashboard/admin/delete_book/${bookId}`,
       {
         method: "DELETE",
         headers: {

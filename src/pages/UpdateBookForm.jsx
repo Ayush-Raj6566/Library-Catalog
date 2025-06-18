@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
+import BASE_URL from "../api";
 const UpdateBookForm = () => {
   const { bookId } = useParams();
   const [formData, setFormData] = useState({
@@ -38,7 +38,7 @@ const UpdateBookForm = () => {
 
     try {
       const res = await fetch(
-        `https://drug-rotary-providers-expressed.trycloudflare.com/dashboard/admin/update_book/${bookId}`,
+        `${BASE_URL}/dashboard/admin/update_book/${bookId}`,
         {
           method: "PATCH",
           headers: {

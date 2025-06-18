@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import BASE_URL from "../api";
 function Signup() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -16,7 +16,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://drug-rotary-providers-expressed.trycloudflare.com/user/signup", {
+      const response = await fetch(`${BASE_URL}/user/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
