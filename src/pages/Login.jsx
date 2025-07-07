@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BASE_URL from "../api";
+import { auth, provider, signInWithPopup } from "./fireBase_backup";
+
 const Login = () => {
   const [username, setUsername] = useState(""); 
   const [password, setPassword] = useState("");
@@ -90,10 +92,43 @@ console.log(data); // check if fullName exists
           Login
         </button>
 
+      {/* Divider */}
+<div className="text-center my-4">OR</div>
+
+{/* Google Sign-In Button */}
+<button
+  type="button"
+  onClick={async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // You can use user.email or user.displayName here
+      console.log("Google User:", user);
+
+      // Save to localStorage
+      localStorage.setItem("username", user.email);
+      localStorage.setItem("fullName", user.displayName);
+      localStorage.setItem("userType", "user"); // or determine from email
+
+      // Redirect to user dashboard (you can customize this logic)
+      navigate("/user-dashboard");
+    } catch (err) {
+      console.error("Google Sign-In Error:", err);
+      alert("Google Sign-In failed. Try again.");
+    }
+  }}
+  className="w-full bg-red-600 text-white py-2 rounded"
+>
+  Continue with Google
+</button>
+
+
         <p className="text-center mt-4">
           Don't have an account? <a href="/signup" className="text-blue-600 underline">Sign Up</a>
         </p>
       </form>
+
     </div>
   );
 };
